@@ -1,5 +1,13 @@
 from . import script_manager
 
+# Dependencias
+from awsglue.dynamicframe import DynamicFrame
+from awsglue.transforms import SelectFromCollection
+from awsgluedq.transforms import EvaluateDataQuality
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+import boto3
+
 class QualityManager(script_manager.ScriptManager):
 
     def __init__(
