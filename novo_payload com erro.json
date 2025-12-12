@@ -1,0 +1,50 @@
+{
+    "Payload": [
+        {
+            "modulo": "meu_modulo1",
+            "execucao": [
+                {
+                    "name": "meu_modulo1_execucao",
+                    "tabelas": [
+                        {
+                            "tabela": {
+                                "GlueJobParameters": {
+                                    "DPU": 0
+                                }
+                            }
+                        },
+                        {
+                            "tabela": {
+                                "GlueJobParameters": {
+                                    "DPU": 0,
+                                    "query": "alguma coisa"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "meu_modulo1_execucao2",
+                    "tabelas": [
+                        {
+                            "tabela": {
+                                "GlueJobParameters": {
+                                    "DPU": 0,
+                                    "query": "alguma coisa"
+                                }
+                            }
+                        },
+                        {
+                            "tabela": {
+                                "GlueJobParameters": {
+                                    "DPU": 0,
+                                    "query": "outra coisa"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

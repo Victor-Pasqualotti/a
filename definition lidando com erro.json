@@ -1,0 +1,53 @@
+{
+  "Comment": "A simple example",
+  "StartAt": "Processa Payload",
+  "States": {
+    "Processa Payload": {
+      "Type": "Map",
+      "InputPath": "$",
+      "ItemsPath": "$.Payload",
+      "Iterator": {
+        "StartAt": "Processa Modulo",
+        "States": {
+          "Processa Modulo": {
+            "Type": "Map",
+            "InputPath": "$",
+            "ItemsPath": "$.execucao",
+            "Iterator": {
+              "StartAt": "Processa Passo",
+              "States": {
+                "Processa Passo": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:states:::states:startExecution.sync",
+                  "Parameters": {
+                    "StateMachineArn": "arn:aws:states:sa-east-1:768723496755:stateMachine:meu-processo-step-function",
+                    "Input.$": "$"
+                  },
+                  "Catch": [
+                    {
+                      "ErrorEquals": [
+                        "States.ALL"
+                      ],
+                      "ResultPath": "$.ChildError",
+                      "Next": "HandleChildFailure"
+                    }
+                  ],
+                  "End": true
+                },
+                "HandleChildFailure": {
+                  "Type": "Pass",
+                  "Result": {
+                    "ChildStatus": "FAILED"
+                  },
+                  "End": true
+                }
+              }
+            },
+            "End": true
+          }
+        }
+      },
+      "End": true
+    }
+  }
+}
