@@ -1,0 +1,48 @@
+# Context
+
+Iam working on aws glue  python shell to perform a simple task.
+
+Glue Python Shell details:
+* 1 DPU (16 GB)
+
+The task consists in reading multiple small files with average size of 10 MB from an s3 bucket. And write them back to anothe s3 bucket as a single file.
+So, if my script finds 6 files in my first bucket, it must be able to write at most 5 files in my second bucket. 
+The script should always reduce the amount of files, but always keeping all data content.
+In other words, the script helps to reduce small files.
+
+The script logic to understand how to handle the small files take in consideration the following:
+1) Execution Plan
+* Machine memory consumption: to define that, script reads all files by chunks of 2 million rows and calculate total memory consumption for each file. Using: dfs = wr.s3.read_parquet(path = [file], dtype_backend="pyarrow", chunked = 2_000_000)
+* Machine memory available: using psutil.virtual_memory()
+* Proccess memory consumption: using psutil.Proccess.memory_info().rss
+* Container memory consumption: by reading the files '/sys/fs/cgroup/memory/memory.limit_in_bytes', '/sys/fs/cgroup/memory/memory.usage_in_bytes'
+2) Execution Read and write operation
+The script runs in batches, iterating over chunks of rows. Each batch can read N chunks. And the number of chunks is defined to do not exceed 70% of memory usage of both host and container.
+* Once the script collected how much memory and how many rows each file has, it defines how many hows it can read at time.
+* Starts to read the files by the number of rows defined in the previous step. Using: dfs = wr.s3.read_parquet(path = [file], dtype_backend="pyarrow", chunked = n_rows)
+* For each chunk readed, writes it to the destination bucket.
+
+Important: 
+* If the script understand that it will not be able to reduce the amount of files due memory limitations, it just use boto3 to copy the files from one bucket to another.
+* The parquet files are highly compressed. While the parquet s3 object has 10 MB it can means 2 GB of machine memory consumption.
+
+# Problem statement
+
+Recently and execution of this glue python shell job failed with the following message: "Command failed with exit code 137".
+I understand that this is an OOM (out of memory) type of error, so i checked my logs.
+
+From my logs, i could be able to see that:
+* the job was executing the script to 8 files
+* it already have successfully write 3 files in the destination bucket (equivalent to 6 origin bucket files data)
+* the average memory use for Machine and Container was around ~2.3 GB
+
+From aws glue python shell documentation (https://docs.aws.amazon.com/glue/latest/dg/add-job-python.html), i have the following information:
+"The /tmp directory is available for temporary storage during job execution. This directory provides approximately 14 GiB of free space that you can use for: temporary file processing, intermediate data storage, caching small datasets"
+
+My glue python shell job never got close to 14 GB memory consumption, based on my logs data.
+
+# Problem solution (task)
+
+I need you to think about the context i gave you. And carefully understand the problem i described.
+Give me a detailed explanation on what you think is causing the job failure, explaining why.
+Also, give me tips to work around the problem "Command failed with exit code 137".
