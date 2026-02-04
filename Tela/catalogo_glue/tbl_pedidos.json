@@ -1,0 +1,53 @@
+{
+    "table_name": "orders",
+    "columns": [
+        {
+            "column_name": "order_id",
+            "type": "integer"
+        },
+        {
+            "column_name": "order_date",
+            "type": "timestamp"
+        },
+        {
+            "column_name": "customer_id",
+            "type": "integer"
+        },
+        {
+            "column_name": "order_status",
+            "type": "string"
+        },
+        {
+            "column_name": "payment_method",
+            "type": "string"
+        },
+        {
+            "column_name": "total_items",
+            "type": "integer"
+        },
+        {
+            "column_name": "subtotal_amount",
+            "type": "decimal(12,2)"
+        },
+        {
+            "column_name": "shipping_amount",
+            "type": "decimal(12,2)"
+        },
+        {
+            "column_name": "discount_amount",
+            "type": "decimal(12,2)"
+        },
+        {
+            "column_name": "total_amount",
+            "type": "decimal(12,2)"
+        },
+        {
+            "column_name": "created_at",
+            "type": "timestamp"
+        },
+        {
+            "column_name": "updated_at",
+            "type": "timestamp"
+        }
+    ]
+}
